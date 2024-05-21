@@ -24,6 +24,7 @@ static void wifi_marauder_app_tick_event_callback(void* context) {
 
 WifiMarauderApp* wifi_marauder_app_alloc() {
     WifiMarauderApp* app = malloc(sizeof(WifiMarauderApp));
+
     app->gui = furi_record_open(RECORD_GUI);
     app->dialogs = furi_record_open(RECORD_DIALOGS);
     app->storage = furi_record_open(RECORD_STORAGE);
@@ -31,17 +32,21 @@ WifiMarauderApp* wifi_marauder_app_alloc() {
     app->log_file = storage_file_alloc(app->storage);
     app->save_pcap_setting_file = storage_file_alloc(app->storage);
     app->save_logs_setting_file = storage_file_alloc(app->storage);
+
     app->view_dispatcher = view_dispatcher_alloc();
     app->scene_manager = scene_manager_alloc(&wifi_marauder_scene_handlers, app);
     view_dispatcher_enable_queue(app->view_dispatcher);
     view_dispatcher_set_event_callback_context(app->view_dispatcher, app);
+
     view_dispatcher_set_custom_event_callback(
         app->view_dispatcher, wifi_marauder_app_custom_event_callback);
     view_dispatcher_set_navigation_event_callback(
         app->view_dispatcher, wifi_marauder_app_back_event_callback);
     view_dispatcher_set_tick_event_callback(
         app->view_dispatcher, wifi_marauder_app_tick_event_callback, 100);
+
     view_dispatcher_attach_to_gui(app->view_dispatcher, app->gui, ViewDispatcherTypeFullscreen);
+
     app->var_item_list = variable_item_list_alloc();
     view_dispatcher_add_view(
         app->view_dispatcher,
@@ -98,12 +103,20 @@ void wifi_marauder_make_app_folder(WifiMarauderApp* app) {
         dialog_message_show_storage_error(app->dialogs, "Cannot create\npcaps folder");
     }
 
+    if(!storage_simply_mkdir(app->storage, MARAUDER_APP_FOLDER_DUMPS)) {
+        dialog_message_show_storage_error(app->dialogs, "Cannot create\ndumps folder");
+    }
+
     if(!storage_simply_mkdir(app->storage, MARAUDER_APP_FOLDER_LOGS)) {
-        dialog_message_show_storage_error(app->dialogs, "Cannot create\npcaps folder");
+        dialog_message_show_storage_error(app->dialogs, "Cannot create\nlogs folder");
     }
 
     if(!storage_simply_mkdir(app->storage, MARAUDER_APP_FOLDER_SCRIPTS)) {
         dialog_message_show_storage_error(app->dialogs, "Cannot create\nscripts folder");
+    }
+
+    if(!storage_simply_mkdir(app->storage, MARAUDER_APP_FOLDER_HTML)) {
+        dialog_message_show_storage_error(app->dialogs, "Cannot create\nhtml folder");
     }
 }
 
