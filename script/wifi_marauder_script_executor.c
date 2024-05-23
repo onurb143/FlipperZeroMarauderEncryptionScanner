@@ -17,7 +17,7 @@ void _send_line_break(WifiMarauderScriptWorker* worker) {
 void _send_channel_select(WifiMarauderScriptWorker* worker, int channel) {
     char command[30];
     _send_line_break(worker);
-    snprintf(command, sizeof(command), "channel -s %d\n", channel);
+    snprintf(command, sizeof(command), "channel -ss %d\n", channel);
     wifi_marauder_uart_tx(worker->uart, (uint8_t*)(command), strlen(command));
 }
 
