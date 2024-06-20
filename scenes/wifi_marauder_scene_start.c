@@ -1,6 +1,7 @@
-//** Includes sniffbt and sniffskim for compatible ESP32-WROOM hardware.
-//wifi_marauder_app_i.h also changed **//
 #include "../wifi_marauder_app_i.h"
+#include "../script/menu/wifi_marauder_scan_results.h"
+
+// Resten af koden
 
 // For each command, define whether additional arguments are needed
 // (enabling text input to fill them out), and whether the console
@@ -25,36 +26,43 @@ typedef struct {
 
 // NUM_MENU_ITEMS defined in wifi_marauder_app_i.h - if you add an entry here, increment it!
 const WifiMarauderItem items[NUM_MENU_ITEMS] = {
-    {"View Log from", {"start", "end"}, 2, {"", ""}, NO_ARGS, FOCUS_CONSOLE_TOGGLE, NO_TIP},
+    {"View Log from Bruno", {"start", "end"}, 2, {"", ""}, NO_ARGS, FOCUS_CONSOLE_TOGGLE, NO_TIP},
     {"Scan Bruno",
-     {"ap", "station"},
-     2,
-     {"scanap", "scansta"},
+     {"ap", "station", "bigbruno"},
+     3,
+     {"scanap", "scansta", "scanbigbruno"},
      NO_ARGS,
      FOCUS_CONSOLE_END,
      SHOW_STOPSCAN_TIP},
-    {"SSID",
+    {"RSSI Bruno",
+     {"low", "medium", "high"},
+     3,
+     {"rssi_low", "rssi_medium", "rssi_high"},
+     NO_ARGS,
+     FOCUS_CONSOLE_TOGGLE,
+     NO_TIP},
+    {"SSID Bruno",
      {"add rand", "add name", "remove"},
      3,
      {"ssid -a -g", "ssid -a -n", "ssid -r"},
      INPUT_ARGS,
      FOCUS_CONSOLE_START,
      NO_TIP},
-    {"List",
+    {"List Bruno",
      {"ap", "ssid", "station"},
      3,
      {"list -a", "list -s", "list -c"},
      NO_ARGS,
      FOCUS_CONSOLE_START,
      NO_TIP},
-    {"Select",
+    {"Select Bruno",
      {"ap", "ssid", "station"},
      3,
      {"select -a", "select -s", "select -c"},
      INPUT_ARGS,
      FOCUS_CONSOLE_END,
      NO_TIP},
-    {"Clear List",
+    {"Clear List Bruno",
      {"ap", "ssid", "station"},
      3,
      {"clearlist -a", "clearlist -s", "clearlist -c"},
@@ -82,14 +90,14 @@ const WifiMarauderItem items[NUM_MENU_ITEMS] = {
      NO_ARGS,
      FOCUS_CONSOLE_END,
      SHOW_STOPSCAN_TIP},
-    {"Wardrive",
+    {"Wardrive Bruno",
      {"ap", "station", "bt", "bt cont"},
      4,
      {"wardrive", "wardrive -s", "btwardrive", "btwardrive -c"},
      NO_ARGS,
      FOCUS_CONSOLE_END,
      SHOW_STOPSCAN_TIP},
-    {"Evil Portal",
+    {"Evil Portal Bruno",
      {"start", "set html"},
      2,
      {"evilportal -c start", "evilportal -c sethtml"},
@@ -103,21 +111,21 @@ const WifiMarauderItem items[NUM_MENU_ITEMS] = {
      NO_ARGS,
      FOCUS_CONSOLE_END,
      NO_TIP},
-    {"Targeted Deauth",
+    {"Targeted Deauth Bruno",
      {"station", "manual"},
      2,
      {"attack -t deauth -c", "attack -t deauth -s"},
      TOGGLE_ARGS,
      FOCUS_CONSOLE_END,
      SHOW_STOPSCAN_TIP},
-    {"Beacon Spam",
+    {"Beacon Spam Bruno",
      {"ap list", "ssid list", "random"},
      3,
      {"attack -t beacon -a", "attack -t beacon -l", "attack -t beacon -r"},
      NO_ARGS,
      FOCUS_CONSOLE_END,
      SHOW_STOPSCAN_TIP},
-    {"Sniff",
+    {"Sniff Bruno",
      {"beacon", "deauth", "pmkid", "probe", "pwn", "raw", "bt", "skim"},
      8,
      {"sniffbeacon",
@@ -131,7 +139,7 @@ const WifiMarauderItem items[NUM_MENU_ITEMS] = {
      NO_ARGS,
      FOCUS_CONSOLE_END,
      SHOW_STOPSCAN_TIP},
-    {"Signal Monitor", {""}, 1, {"sigmon"}, NO_ARGS, FOCUS_CONSOLE_END, SHOW_STOPSCAN_TIP},
+    {"Signal Monitor Bruno", {""}, 1, {"sigmon"}, NO_ARGS, FOCUS_CONSOLE_END, SHOW_STOPSCAN_TIP},
     {"Channel",
      {"get", "set"},
      2,
@@ -166,7 +174,7 @@ const WifiMarauderItem items[NUM_MENU_ITEMS] = {
      TOGGLE_ARGS,
      FOCUS_CONSOLE_START,
      NO_TIP},
-    {"List SD", {""}, 1, {"ls /"}, INPUT_ARGS, FOCUS_CONSOLE_END, NO_TIP},
+    {"List SD Bruno", {""}, 1, {"ls /"}, INPUT_ARGS, FOCUS_CONSOLE_END, NO_TIP},
     {"Update", {"sd"}, 1, {"update -s"}, NO_ARGS, FOCUS_CONSOLE_END, NO_TIP},
     {"Reboot", {""}, 1, {"reboot"}, NO_ARGS, FOCUS_CONSOLE_END, NO_TIP},
     {"Help", {""}, 1, {"help"}, NO_ARGS, FOCUS_CONSOLE_START, SHOW_STOPSCAN_TIP},
@@ -248,6 +256,7 @@ static void wifi_marauder_scene_start_var_list_change_callback(VariableItem* ite
     app->selected_option_index[app->selected_menu_index] = item_index;
 }
 
+// Inkluder funktionen fra header-filen
 void wifi_marauder_scene_start_on_enter(void* context) {
     WifiMarauderApp* app = context;
     VariableItemList* var_item_list = app->var_item_list;
@@ -273,7 +282,7 @@ void wifi_marauder_scene_start_on_enter(void* context) {
 
     view_dispatcher_switch_to_view(app->view_dispatcher, WifiMarauderAppViewVarItemList);
 
-    // Wait, if the user hasn't initialized sdcard settings, let's prompt them once (then come back here)
+    // Vent, hvis brugeren ikke har initialiseret sdcard-indstillinger, lad os spørge dem en gang (så kom tilbage her)
     if(app->need_to_prompt_settings_init) {
         scene_manager_next_scene(app->scene_manager, WifiMarauderSceneSettingsInit);
     }

@@ -1,8 +1,11 @@
 #include "wifi_marauder_app_i.h"
-
+#include "script/menu/wifi_marauder_scan_results.h"
 #include <furi.h>
 #include <furi_hal.h>
 #include <expansion/expansion.h>
+
+int num_scanned_devices = 0;
+ScannedDevice* scanned_devices = NULL;
 
 static bool wifi_marauder_app_custom_event_callback(void* context, uint32_t event) {
     furi_assert(context);

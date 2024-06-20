@@ -1,6 +1,7 @@
-//** Includes sniffbt and sniffskim for compatible ESP32-WROOM hardware.
-// wifi_marauder_scene_start.c also changed **//
-#pragma once
+#ifndef WIFI_MARAUDER_APP_I_H
+#define WIFI_MARAUDER_APP_I_H
+
+#include "script/menu/wifi_marauder_scan_results.h"
 
 #include "wifi_marauder_app.h"
 #include "scenes/wifi_marauder_scene.h"
@@ -27,7 +28,7 @@
 #include <lib/toolbox/path.h>
 #include <dialogs/dialogs.h>
 
-#define NUM_MENU_ITEMS (24)
+#define NUM_MENU_ITEMS (25)
 
 #define WIFI_MARAUDER_TEXT_BOX_STORE_SIZE (4096)
 #define WIFI_MARAUDER_TEXT_INPUT_STORE_SIZE (512)
@@ -44,6 +45,7 @@
 #define MARAUDER_APP_SCRIPT_PATH(file_name) MARAUDER_APP_FOLDER_SCRIPTS "/" file_name ".json"
 #define SAVE_PCAP_SETTING_FILEPATH MARAUDER_APP_FOLDER "/save_pcaps_here.setting"
 #define SAVE_LOGS_SETTING_FILEPATH MARAUDER_APP_FOLDER "/save_logs_here.setting"
+#define SCENE_ID_SCAN_DETAILS 100
 
 typedef enum WifiMarauderUserInputType {
     WifiMarauderUserInputTypeString,
@@ -145,3 +147,5 @@ typedef enum {
     WifiMarauderAppViewWidget,
     WifiMarauderAppViewSubmenu,
 } WifiMarauderAppView;
+
+#endif // WIFI_MARAUDER_APP_I_H

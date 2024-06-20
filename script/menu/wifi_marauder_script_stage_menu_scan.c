@@ -1,4 +1,5 @@
 #include "../../wifi_marauder_app_i.h"
+#include "wifi_marauder_scan_results.h"
 
 void wifi_marauder_scan_stage_type_setup_callback(VariableItem* item) {
     WifiMarauderApp* app = variable_item_get_context(item);
@@ -85,8 +86,8 @@ void wifi_marauder_script_stage_menu_scan_load(WifiMarauderScriptStageMenu* stag
     stage_menu->items[0] = (WifiMarauderScriptMenuItem){
         .name = strdup("Type"),
         .type = WifiMarauderScriptMenuItemTypeOptionsString,
-        .num_options = 2,
-        .options = {"ap", "station"},
+        .num_options = 3,
+        .options = {"ap", "station", "bigbruno"},
         .setup_callback = wifi_marauder_scan_stage_type_setup_callback,
         .change_callback = wifi_marauder_scan_stage_type_change_callback,
     };
@@ -103,7 +104,8 @@ void wifi_marauder_script_stage_menu_scan_load(WifiMarauderScriptStageMenu* stag
         .type = WifiMarauderScriptMenuItemTypeNumber,
         .num_options = 1,
         .setup_callback = wifi_marauder_scan_stage_timeout_setup_callback,
-        .select_callback = wifi_marauder_scan_stage_timeout_select_callback};
+        .select_callback = wifi_marauder_scan_stage_timeout_select_callback,
+        };
     stage_menu->items[3] = (WifiMarauderScriptMenuItem){
         .name = strdup("Encryption"),
         .type = WifiMarauderScriptMenuItemTypeOptionsString,
@@ -122,3 +124,14 @@ void wifi_marauder_script_stage_menu_scan_load(WifiMarauderScriptStageMenu* stag
         .change_callback = wifi_marauder_scan_stage_encryption_change_callback,
     };
 }
+
+/*void display_scan_results() {
+    for(int i = 0; i < num_scanned_devices; ++i) {
+        ScannedDevice device = scanned_devices[i];
+        printf(
+            "SSID: %s, RSSI: %d, Encryption: %d\n",
+            device.ssid,
+            device.rssi,
+            device.encryption); // Udskriv RSSI og kryptering
+    }
+}*/

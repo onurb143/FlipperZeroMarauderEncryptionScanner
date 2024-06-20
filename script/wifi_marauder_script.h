@@ -159,7 +159,7 @@ typedef struct WifiMarauderScriptStageScan {
     WifiMarauderScriptScanType type;
     int channel;
     int timeout;
-    int encryption;
+    int encryption; // Tilføjet felt for krypteringstype
 } WifiMarauderScriptStageScan;
 
 typedef struct WifiMarauderScriptStageSelect {
@@ -167,7 +167,6 @@ typedef struct WifiMarauderScriptStageSelect {
     char* filter;
     int* indexes;
     int index_count;
-    // TODO: Implement a feature to not select the same items in the next iteration of the script
     bool allow_repeat;
 } WifiMarauderScriptStageSelect;
 

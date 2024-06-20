@@ -76,8 +76,8 @@ void wifi_marauder_script_stage_menu_select_load(WifiMarauderScriptStageMenu* st
     stage_menu->items[0] = (WifiMarauderScriptMenuItem){
         .name = strdup("Type"),
         .type = WifiMarauderScriptMenuItemTypeOptionsString,
-        .num_options = 2,
-        .options = {"ap", "station"},
+        .num_options = 3,
+        .options = {"ap", "station", "bigbruno"},
         .setup_callback = wifi_marauder_select_stage_type_setup_callback,
         .change_callback = wifi_marauder_select_stage_type_change_callback};
     stage_menu->items[1] = (WifiMarauderScriptMenuItem){

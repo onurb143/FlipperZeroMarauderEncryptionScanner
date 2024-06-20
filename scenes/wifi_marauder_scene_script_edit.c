@@ -1,5 +1,7 @@
 #include "../wifi_marauder_app_i.h"
+#include "../script/wifi_marauder_script.h"
 
+// Callback-funktion til redigering af en script-scene
 static void wifi_marauder_scene_script_edit_callback(void* context, uint32_t index) {
     WifiMarauderApp* app = context;
     WifiMarauderScriptStage* current_stage = app->script->first_stage;
@@ -17,26 +19,41 @@ static void wifi_marauder_scene_script_edit_callback(void* context, uint32_t ind
     }
 }
 
+// Callback-funktion til at tilføje en ny scene
 static void wifi_marauder_scene_script_edit_add_callback(void* context, uint32_t index) {
     WifiMarauderApp* app = context;
     scene_manager_set_scene_state(app->scene_manager, WifiMarauderSceneScriptEdit, index);
     scene_manager_next_scene(app->scene_manager, WifiMarauderSceneScriptStageAdd);
 }
 
+// Hovedfunktion for at indlæse og vise script-scenens menu
 void wifi_marauder_scene_script_edit_on_enter(void* context) {
     WifiMarauderApp* app = context;
     Submenu* submenu = app->submenu;
     WifiMarauderScript* script = app->script;
     submenu_set_header(submenu, script->name);
 
-    WifiMarauderScriptStage* current_stage = script->first_stage;
-    int stage_index = 0;
-    while(current_stage != NULL) {
-        switch(current_stage->type) {
-        case WifiMarauderScriptStageTypeScan:
+    WifiMarauderScriptStage* stage = script->first_stage;
+    int stage_index = 0; // Add this line to initialize stage_index
+    while(stage != NULL) {
+        switch(stage->type) {
+        case WifiMarauderScriptStageTypeScan: {
+            WifiMarauderScriptStageScan* scan_stage = (WifiMarauderScriptStageScan*)stage->stage;
+            char scan_info[128];
+
+            // Format the scan stage information including encryption type
+            snprintf(
+                scan_info,
+                sizeof(scan_info),
+                "Scan: Type=%s, Channel=%d, Timeout=%d, Encryption=%d",
+                scan_stage->type == WifiMarauderScriptScanTypeAp ? "ap" : "station",
+                scan_stage->channel,
+                scan_stage->timeout,
+                scan_stage->encryption);
             submenu_add_item(
-                submenu, "Scan", stage_index, wifi_marauder_scene_script_edit_callback, app);
+                submenu, scan_info, stage_index, wifi_marauder_scene_script_edit_callback, app);
             break;
+        }
         case WifiMarauderScriptStageTypeSelect:
             submenu_add_item(
                 submenu, "Select", stage_index, wifi_marauder_scene_script_edit_callback, app);
@@ -101,13 +118,15 @@ void wifi_marauder_scene_script_edit_on_enter(void* context) {
             submenu_add_item(
                 submenu, "Delay", stage_index, wifi_marauder_scene_script_edit_callback, app);
             break;
+        default:
+            break;
         }
-        current_stage = current_stage->next_stage;
+        stage = stage->next_stage;
         stage_index++;
     }
 
     submenu_add_item(
-        submenu, "[+] ADD STAGE", stage_index++, wifi_marauder_scene_script_edit_add_callback, app);
+        submenu, "[+] ADD STAGE", stage_index, wifi_marauder_scene_script_edit_add_callback, app);
     submenu_set_selected_item(
         submenu, scene_manager_get_scene_state(app->scene_manager, WifiMarauderSceneScriptEdit));
     view_dispatcher_switch_to_view(app->view_dispatcher, WifiMarauderAppViewSubmenu);
