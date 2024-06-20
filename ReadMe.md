@@ -17,9 +17,3 @@ Requires a connected dev board running Marauder FW. [See install instructions fr
 
 From a local clone of this repo, you can also build the app yourself using ufbt.
 
-### FYI - the ESP flasher is now its own app: https://github.com/0xchocolate/flipperzero-esp-flasher
-
-
-## Support
-
-For app feedback, bugs, and feature requests, please [create an issue here](https://github.com/0xchocolate/flipperzero-firmware-with-wifi-marauder-companion/issues).
